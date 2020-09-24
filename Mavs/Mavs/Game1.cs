@@ -19,6 +19,17 @@ namespace Mavs
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        //Stuff for Background
+        Rectangle backgroundRectangle;
+        Texture2D backgroundTexture;
+
+        //Stuff for Basketball
+        Rectangle ballRectangle;
+        Texture2D ballTexture;
+        double ballxPos;
+        double ballyPos;
+        double xVel;
+        double yVel;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,7 +45,15 @@ namespace Mavs
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            //Initialize Background
+            backgroundRectangle = new Rectangle(0,0,780, 312);
 
+            //Initialize Ball
+            ballxPos = 150;
+            ballyPos = 200;
+            xVel = 48;
+            yVel = -60;
+            ballRectangle = new Rectangle((int)ballxPos, (int)ballyPos, 96, 90);
             base.Initialize();
         }
 
@@ -48,6 +67,8 @@ namespace Mavs
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            backgroundTexture = this.Content.Load<Texture2D>("basketballcourt");
+            ballTexture = this.Content.Load<Texture2D>("basketball");
         }
 
         /// <summary>
@@ -71,7 +92,16 @@ namespace Mavs
                 this.Exit();
 
             // TODO: Add your update logic here
-
+            if (ballxPos >= 600) {
+                xVel = 0;
+            }
+            if (ballyPos >= 201) {
+                yVel = 0;
+            }
+            yVel += 9.8 / 60;
+            ballxPos += xVel/60;
+            ballyPos += yVel/60;
+            ballRectangle = new Rectangle((int)ballxPos,(int)ballyPos,96,90);
             base.Update(gameTime);
         }
 
@@ -84,7 +114,10 @@ namespace Mavs
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(backgroundTexture, backgroundRectangle, Color.White);
+            spriteBatch.Draw(ballTexture, ballRectangle, Color.White);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
